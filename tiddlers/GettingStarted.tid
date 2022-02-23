@@ -1,0 +1,19 @@
+created: 20220222095225642
+creator: HenryTujia
+icon: $:/core/images/preview-open
+modified: 20220223032415632
+modifier: HenryTujia
+page-cover: https://source.unsplash.com/random
+title: GettingStarted
+tmap.id: 98411531-07c4-45df-96ed-c7444aa1ddf6
+type: text/vnd.tiddlywiki
+
+
+
+<<reuse-tiddler "快速创建新笔记按钮">>
+
+<<details label:"本知识库的介绍（来访者点击查看）" src:"本知识库的介绍" labelClass:"bg-secondary text-white">>
+
+<<reuse-tiddler "优先待办列表">>
+
+<$echarts $tiddler="$:/plugins/Gk0Wk/echarts/addons/oflg/CalendarHeatmap.js" $height="150px" />

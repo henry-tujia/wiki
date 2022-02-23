@@ -1,0 +1,65 @@
+created: 20220222084505846
+creator: TidGiUser
+icon: 📒
+modified: 20220222133942459
+modifier: HenryTujia
+page-cover: https://source.unsplash.com/random
+tags: C++
+title: 指针与引用
+tmap.id: 8be92093-b42a-46bb-b98c-7022133edb59
+type: text/vnd.tiddlywiki
+
+
+!!函数参数为引用
+
+```cpp
+class Test{
+public:
+    std::unique_ptr<double> le_tst;
+    double* length_;
+    void change(double& len_);
+};
+
+void Test::change(double& len_){
+    len++;
+};
+
+int main(){
+    Test test;
+    double a = 10.0;
+    test.change(a);
+    printf("a is %f\n",a);
+}
+
+```
+
+!!!总结
+
+当函数参数参数为引用时，引用只能赋值一次，而不能进行传递，因此代码中的`length_`无法通过赋值使其与`len_`进行绑定
+
+!!函数参数为指针
+```cpp
+class Test{
+public:
+    std::unique_ptr<double> le_tst;
+    double* length_;
+    void change(double* len_);
+};
+
+void Test::change(double* len_){
+    length_ = len_;
+    (*length_)++;
+};
+
+int main(){
+    Test test;
+    double a = 10.0;
+    test.change(&a);
+    printf("a is %f\n",a);
+}
+```
+!!!总结
+指针可以进行多次的传递，但是需要注意类型的改变，即函数输入要更改为参数的地址，且内部变量要更改类型为指针类型，在改变时需要加上`*`
+
+
+

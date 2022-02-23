@@ -1,0 +1,82 @@
+caption: {{||Cloze}}
+created: 20220221124706958
+creator: HenryTujia
+icon: 🥇
+modified: 20220222140422234
+modifier: HenryTujia
+page-cover: https://source.unsplash.com/random
+tags: [[Personalized Federated Learning]] ICML 2021
+title: Debiasing Model Updates for Improving Personalized Federated Training
+tmap.id: d56c67a3-22b5-4643-b71a-bbdc0102cb8b
+type: text/vnd.tiddlywiki
+
+!! 总述
+
+通过进行梯度修正改进了模型优化目标，使设备的模型与全局的模型优化方向趋于一致。在实现了个性化的同时保证了全局模型的最优化。
+[img[image.png]]
+
+!! 痛点以及解决方式
+
+!!!痛点
+设备之间的数据差异与联邦学习的架构限制，使用梯度进行修正（具体体现在公式中）
+
+* 数据差异：可以理解为设备之间的非独立同分布造成的
+* 联邦学习架构限制：传统使用元学习进行个性化表示的方法需要使用公开的数据建立一个尚可的`init model`，但因为联邦学习的强隐私保护，因此不能采取这种方式
+
+!!!解决方式
+
+!!!!PFLScaf Algorithm
+
+$$
+\begin{aligned}
+\min _{\boldsymbol{w}} & f_{i} \circ T_{i}(\boldsymbol{w})-\left\langle\nabla f_{i} \circ T_{i}\left(\boldsymbol{w}^{t}\right), \boldsymbol{w}\right\rangle +\left\langle\frac{1}{m} \sum_{j \in[m]} \nabla f_{j} \circ T_{j}\left(\boldsymbol{w}^{t}\right), \boldsymbol{w}\right\rangle+\frac{\alpha}{2}\left\|\boldsymbol{w}-\boldsymbol{w}^{t}\right\|^{2}
+\end{aligned}
+$$
+
+!!!!PFLDyn Algorithm
+$$
+\begin{aligned}
+&\min _{\boldsymbol{w}} f_{i} \circ T_{i}(\boldsymbol{w})-\left\langle\nabla f_{i} \circ T_{i}\left(\boldsymbol{w}_{i}^{t}\right), \boldsymbol{w}\right\rangle +\left\langle\frac{1}{m} \sum_{j \in[m]} \nabla f_{j} \circ T_{j}\left(\boldsymbol{w}_{j}^{t}\right), \boldsymbol{w}\right\rangle+\frac{\alpha}{2}\left\|\boldsymbol{w}-\boldsymbol{w}^{t}\right\|^{2}
+\end{aligned}
+$$
+
+
+!!!!符号解释：
+* $$f_i\circ T_i(\boldsymbol{w})=f_i\left( w_i \right) $$代表`local`模型的实际损失
+* $$\left\langle\nabla f_{i} \circ T_{i}\left(\boldsymbol{w}^{t}\right), \boldsymbol{w}\right\rangle$$代表第$$t$$轮的模型在$$client_i$$的梯度与全局模型$$w$$的点集，通过求导可发现$$w^t$$为本方程的一个解，因此可以使其与全局模型的优化方向保持一致；故也称本项为$$debias$$项
+* $$\left\langle\frac{1}{m} \sum_{j \in[m]} \nabla f_{j} \circ T_{j}\left(\boldsymbol{w}^{t}\right), \boldsymbol{w}\right\rangle$$代表第$$t$$轮全局模型在所有客户端上的平均梯度，初衷为上式中的所有$$w^t$$都为一个解，但不一定为最优解，因此加入本项是更新不至于停止，陷入一个特解，但因为此项也带了额外的communication costs
+* $$\frac{\alpha}{2}\left\|\boldsymbol{w}-\boldsymbol{w}^{t}\right\|^{2}$$代表正则项，可以使本式在求导时近似为0
+
+!!!!两种方法的对比
+
+可以看到两种方法的对比就是公式中的参与$$debias$$项计算的模型参数不同，带来的影响就是传输代价的区别
+
+首先，在客户端侧的$$SGD$$更新公式可以看作$${w_i}^{t+1}={w_i}^t-\beta \nabla f_i\left( {w_i}^t \right) $$，记$$\nabla f_i\left( {w_i}^t \right)$$为$$g_i^t$$，可以得到$${g_i}^t=\frac{{w_i}^t-{w_i}^{t+1}}{\beta}$$
+
+其次，在训练中各个客户端上传的是$$w_i^t$$，因此可以根据上式推出相应的梯度，但是依赖$$w^t$$的梯度计算就无法获得，必须通过相应的客户端获得
+
+故$$PFLScaf$$方法需要进行两处的数据传输，而$$PFLDyn$$只需要进行一处
+
+!!感兴趣的点以及疑问
+
+# 文中多次提到元学习(meta learning)是否需要进行下一步的学习
+
+# 本文提出的方法是否会损害客户端的个性化表示？
+
+# 使公式不再卡住的项是否有改进方式，其提出是否有科学依据？
+
+# 聚合方法依旧使用FedAvg，是否其他方式会更好？
+
+# 其测试只在CV上进行，并未对RNN进行测试，为什么？效果会好吗？
+
+
+
+
+
+
+
+
+
+
+
+

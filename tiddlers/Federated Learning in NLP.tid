@@ -1,0 +1,15 @@
+created: 20220222133951976
+creator: HenryTujia
+modified: 20220222134604940
+modifier: HenryTujia
+tags: [[Federated Learning]] NLP
+title: Federated Learning in NLP
+tmap.id: 12d88dad-66fd-42da-8f72-692a9ab497d5
+type: text/vnd.tiddlywiki
+
+!!NLP的独特性
+
+* 数据异构型比CV要大得多
+* 数据集的label（如预测下一个词这种）多种多样，而不是简单的几分类问题
+* 模型结构复杂，例如LSTM不等长这种？（未测试）
+* Embedding加密问题，不能泄露用户的word数据
