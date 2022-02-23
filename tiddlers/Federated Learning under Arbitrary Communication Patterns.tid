@@ -1,27 +1,26 @@
-caption: {{||Cloze}}
-created: 20220221124706958
+created: 20220223125728979
 creator: HenryTujia
-icon: 🥇
-modified: 20220223130130906
+icon: 📒
+modified: 20220223140046533
 modifier: HenryTujia
-page-cover: https://source.unsplash.com/random
-tags: [[Personalized Federated Learning]] ICML 2021
-title: Debiasing Model Updates for Improving Personalized Federated Training
-tmap.id: d56c67a3-22b5-4643-b71a-bbdc0102cb8b
+page-cover: https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4wEar?ver=c556
+tags: [[Federated Learning]] ICML 文献阅读
+title: Federated Learning under Arbitrary Communication Patterns
+tmap.id: 3bda05b6-c565-47e9-bee2-6a3ca2432802
 type: text/vnd.tiddlywiki
 
 !! 总述
-
-通过进行梯度修正改进了模型优化目标，使设备的模型与全局的模型优化方向趋于一致。在实现了个性化的同时保证了全局模型的最优化。
-[img[image_bias.png]]
+本文提出了一种针对异步的优化方法，使联邦学习的效果可以达到同步的收敛速度。
 
 !! 痛点以及解决方式
 
 !!!痛点
-设备之间的数据差异与联邦学习的架构限制，使用梯度进行修正（具体体现在公式中）
 
-* 数据差异：可以理解为设备之间的非独立同分布造成的
-* 联邦学习架构限制：传统使用元学习进行个性化表示的方法需要使用公开的数据建立一个尚可的`init model`，但因为联邦学习的强隐私保护，因此不能采取这种方式
+* 非独立同分布问题
+客户端的数据时常是非独立同分布的，而很多实验假设为独立同分布
+
+* 同步方式以及随机选择方式
+同步下的所有客户端都参与训练实际上是不可能的；而随机选择无法保证所选择的子集中都可以可靠的参与训练，因此就要不可避免地多选一些，从中挑选出相应最快的几个，这就造成了设备性能的偏差
 
 !!!解决方式
 
@@ -68,12 +67,6 @@ $$
 # 聚合方法依旧使用FedAvg，是否其他方式会更好？
 
 # 其测试只在CV上进行，并未对RNN进行测试，为什么？效果会好吗？
-
-
-
-
-
-
 
 
 
